@@ -1,12 +1,24 @@
 <template>
-  <div>
-    <van-button type="primary">按钮</van-button>
+  <div id="app">
+    <RouterView class="body" />
+    <RouterView class="footer" name="tabbar" />
   </div>
 </template>
-
-<script>
-export default {}
-</script>
-
-<style>
+<style lang="less" scoped>
+#app {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  .body {
+    flex: 1;
+    overflow: hidden;
+  }
+  .footer {
+    height: 50px;
+  }
+}
 </style>
