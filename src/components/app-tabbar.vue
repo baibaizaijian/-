@@ -1,22 +1,50 @@
 <template>
-  <van-tabbar route>
-    <van-tabbar-item to="/" icon="home-o">首页</van-tabbar-item>
-    <van-tabbar-item to="/question" icon="comment-o">问答</van-tabbar-item>
-    <van-tabbar-item to="/video" icon="tv-o">视频</van-tabbar-item>
-    <van-tabbar-item to="/user" icon="contact">我的</van-tabbar-item>
+  <van-tabbar :border="false" route>
+    <van-tabbar-item to="/">
+      <span>首页</span>
+      <template #icon="props">
+        <!-- 三元表达式判断name -->
+        <geek-icon :name="props.active ? 'home-sel' : 'home'" />
+      </template>
+    </van-tabbar-item>
+    <van-tabbar-item to="/question">
+      <span>问答</span>
+      <template #icon="props">
+        <geek-icon :name="props.active ? 'qa-sel' : 'qa'" />
+      </template>
+    </van-tabbar-item>
+    <van-tabbar-item to="/video">
+      <span>视频</span>
+      <template #icon="props">
+        <geek-icon :name="props.active ? 'video-sel' : 'video'" />
+      </template>
+    </van-tabbar-item>
+    <van-tabbar-item to="/user">
+      <span>我的</span>
+      <template #icon="props">
+        <geek-icon :name="props.active ? 'mine-sel' : 'mine'" />
+      </template>
+    </van-tabbar-item>
   </van-tabbar>
 </template>
 <script>
 export default {
-  name: 'AppTabbar'
+  name: 'GeekTabbar'
 }
 </script>
-<style type="text/css">
-    .icon {
-       width: 1em;
-       height: 1em;
-       vertical-align: -0.15em;
-       fill: currentColor;
-       overflow: hidden;
-    }
+<style scoped lang="less">
+.van-tabbar {
+  background: @geek-gray-color;
+  position: static;
+}
+/deep/ .van-tabbar-item--active {
+  color: @geek-color;
+  background-color: @geek-gray-color
+}
+/deep/ .van-tabbar-item__icon {
+  font-size: 20px;
+}
+/deep/ .van-tabbar-item__text {
+  font-size: 10px;
+}
 </style>
