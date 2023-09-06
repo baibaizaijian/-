@@ -10,18 +10,20 @@ const Question = () => import('@/views/QuestionPage')
 const Video = () => import('@/views/VideoPage')
 const User = () => import('@/views/UserPage')
 const Article = () => import('@/views/ArticlePage')
-
+const Login = () => import('@/views/login')
 const routes = [
   // 路由规则
   { path: '/', components: { default: Home, tabbar: Tabbar } },
   { path: '/question', components: { default: Question, tabbar: Tabbar } },
   { path: '/video', components: { default: Video, tabbar: Tabbar } },
   { path: '/user', components: { default: User, tabbar: Tabbar } },
-  { path: '/article', component: Article }
+  { path: '/article', component: Article },
+  { path: '/login', component: Login }
 ]
 
 const router = new VueRouter({
   routes
 })
+// 导航守卫
 
 export default router

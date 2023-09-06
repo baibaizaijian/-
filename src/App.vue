@@ -1,6 +1,9 @@
 <template>
   <div id="app">
-    <RouterView class="body" />
+    <keep-alive include="HomePage">
+      <RouterView class="body" />
+    </keep-alive>
+
     <RouterView class="footer" name="tabbar" />
   </div>
 </template>
