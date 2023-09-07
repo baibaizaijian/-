@@ -18,6 +18,3 @@ export const sendMessage = (mobile) => {
     url: `/v1_0/sms/codes/${mobile}`
   })
 }
-export const getMyChannels = () => {
-  return request({ url: 'v1_0/user/channels' })
-}

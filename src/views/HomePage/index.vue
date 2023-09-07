@@ -1,37 +1,46 @@
 <template>
   <div class="home-page">
-    <van-tabs>
-    <van-tab v-for="(item) in list"  :key='item.id' :title="item.name">
-    <article-list :articleId="item.id"  ></article-list>
+    <van-tabs v-model="activeIndex">
+      <van-tab v-for="item in list" :key="item.id" :title="item.name">
+        <article-list :articleId="item.id"></article-list>
       </van-tab>
-   </van-tabs>
+    </van-tabs>
 
-    <geek-icon name="search"></geek-icon>
-    <geek-icon name="channel"></geek-icon>
-
+    <div class="btn-wrapper">
+      <geek-icon name="search"></geek-icon>
+      <geek-icon name="channel" @click.native="showChannel = true"></geek-icon>
+    </div>
+    <!-- 弹出层 -->
+    <article-channel
+      v-model="showChannel"
+      :myChannels="list"
+      :activeIndex.sync="activeIndex"
+    ></article-channel>
+    <!-- .sync=:abc="数据" @update:abc="数据=$event" -->
   </div>
 </template>
 <script>
-
 import geekIcon from '@/components/geek-icon.vue'
-import { getAllChannels } from '@/api/channel'
+import { getMyChannels } from '@/api/channel'
 import ArticleList from './components/article-list.vue'
-
+import ArticleChannel from './components/article-channel.vue'
 export default {
-  components: { geekIcon, ArticleList },
+  components: { geekIcon, ArticleList, ArticleChannel },
 
   name: 'HomePage',
   data () {
     return {
-      list: []
+      list: [],
+      showChannel: false,
+      // 当前浏览的频道
+      activeIndex: 0
     }
   },
   async created () {
-    const res = await getAllChannels()
+    const res = await getMyChannels()
     console.log(res)
     this.list = res.data.data.channels
   }
-
 }
 </script>
 <style scoped lang="less">
