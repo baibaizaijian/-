@@ -112,7 +112,7 @@ export default {
       // 2. 新频道数组,拿去发请求,更新
       await addChannel(newMyChannels)
       // 3. 成功：通知父组件更新我的频道
-      this.$emit('update')
+      this.$emit('update:myChannels', newMyChannels)
     },
     async del (id) {
       // 删除操作

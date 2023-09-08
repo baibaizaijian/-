@@ -13,7 +13,7 @@
     <!-- 弹出层 -->
     <article-channel
       v-model="showChannel"
-      :myChannels="list"
+      :myChannels.sync="list"
       :activeIndex.sync="activeIndex"
       @update="update"
       @del="del"
