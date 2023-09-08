@@ -8,7 +8,15 @@
     <div class="article-channel">
       <div class="head">
         <h3>我的频道<small>点击进入频道</small></h3>
-        <a class="edit" href="javascript:;">编辑</a>
+        <a
+          class="edit"
+          @click="isEdit = !isEdit"
+          href="javascript:;"
+          :class="{ active: isEdit }"
+        >
+          {{ isEdit ? "完成" : "编辑" }}
+        </a>
+        <!--根据编辑状态设置标签  -->
       </div>
       <div class="body">
         <a
@@ -16,21 +24,33 @@
           v-for="(item, index) in myChannels"
           :key="item.id"
           :class="{ active: activeIndex === index }"
-           @click="enterChannel(index)"
+          @click="enterChannel(index)"
           >{{ item.name }}
+          <geek-icon
+            v-show="isEdit && index !== 0 && index !== activeIndex"
+            name="tag-close"
+            @click.native.stop="del(item.id)"
+          ></geek-icon>
+          <!--根据编辑状态设置图标显示 , 跳过推荐,和当前项-->
         </a>
       </div>
       <div class="head" style="margin-top: 12px">
         <h3>频道推荐</h3>
       </div>
       <div class="body">
-        <a href="javascript:;" v-for="item in optionalChannels" :key='item.id'>{{ item.name }}</a>
+        <a
+          href="javascript:;"
+          v-for="item in optionalChannels"
+          :key="item.id"
+          @click="addChannel(item)"
+          >+{{ item.name }}</a
+        >
       </div>
     </div>
   </van-popup>
 </template>
 <script>
-import { getAllChannels } from '@/api/channel'
+import { getAllChannels, addChannel, delChannel } from '@/api/channel'
 export default {
   name: 'ArticleChannel',
   props: {
@@ -51,7 +71,9 @@ export default {
   data () {
     return {
       // 全部频道
-      allChannels: []
+      allChannels: [],
+      // 是否编辑
+      isEdit: false
     }
   },
   async created () {
@@ -63,7 +85,9 @@ export default {
     // 可选频道
     optionalChannels () {
       // 找myChannels中没有的
-      return this.allChannels.filter(item => !this.myChannels.find(ele => ele.id === item.id))
+      return this.allChannels.filter(
+        (item) => !this.myChannels.find((ele) => ele.id === item.id)
+      )
     }
   },
   methods: {
@@ -72,9 +96,32 @@ export default {
       this.$emit('input', false)
       // 传递频道索引
       this.$emit('update:activeIndex', index)
+    },
+    async addChannel (item) {
+      // 1. 使用重置式添加频道数据，准备重置式的数据
+      const newMyChannels = []
+      this.myChannels.forEach((c, i) => {
+        // 深度拷贝并加上序号
+        newMyChannels.push({
+          id: c.id,
+          name: c.name,
+          seq: i + 1
+        })
+      })
+      newMyChannels.push({ ...item, seq: newMyChannels.length + 1 })
+      // 2. 新频道数组,拿去发请求,更新
+      await addChannel(newMyChannels)
+      // 3. 成功：通知父组件更新我的频道
+      this.$emit('update')
+    },
+    async del (id) {
+      // 删除操作
+      await delChannel(id)
+      // 成功：更新我的频道
+      const index = this.myChannels.findIndex(item => item.id === id)
+      this.$emit('del', index)
     }
   }
-
 }
 </script>
 <style scoped lang="less">
@@ -127,6 +174,7 @@ export default {
   .body {
     padding: 0 6px 0 16px;
     a {
+      position: relative;
       display: inline-block;
       padding: 0 8px;
       font-size: 14px;
@@ -139,6 +187,12 @@ export default {
       margin-bottom: 12px;
       border-radius: 18px;
       text-align: center;
+      .geek-icon {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        line-height: 1;
+      }
       &.active {
         color: @geek-color;
       }

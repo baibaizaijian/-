@@ -3,14 +3,14 @@ export default {
   namespaced: true,
   state () {
     return {
-      token: localStorage.getItem('geek-store-token')
+      token: localStorage.getItem('jikeyuan-token')
     }
   },
   getters: {},
   mutations: {
     setToken (state, token) {
       state.token = token
-      localStorage.setItem('geek-store-token', token)
+      localStorage.setItem('jikeyuan-token', token)
     }
   },
   actions: {}

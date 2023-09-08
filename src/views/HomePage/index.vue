@@ -15,6 +15,8 @@
       v-model="showChannel"
       :myChannels="list"
       :activeIndex.sync="activeIndex"
+      @update="update"
+      @del="del"
     ></article-channel>
     <!-- .sync=:abc="数据" @update:abc="数据=$event" -->
   </div>
@@ -24,23 +26,43 @@ import geekIcon from '@/components/geek-icon.vue'
 import { getMyChannels } from '@/api/channel'
 import ArticleList from './components/article-list.vue'
 import ArticleChannel from './components/article-channel.vue'
+
 export default {
   components: { geekIcon, ArticleList, ArticleChannel },
 
   name: 'HomePage',
   data () {
     return {
+      // 我的频道
       list: [],
+      // 侧边栏是否显示
       showChannel: false,
       // 当前浏览的频道
       activeIndex: 0
     }
   },
-  async created () {
-    const res = await getMyChannels()
-    console.log(res)
-    this.list = res.data.data.channels
+  created () {
+    this.update()
+  },
+  watch: {
+    // 登录的账户切换,需要更新频道数据。
+    '$store.state.user.token': async function () {
+      const channels = await getMyChannels()
+      this.myChannels = channels
+      this.activeIndex = 0
+    }
+  },
+  methods: {
+    async update () {
+      const res = await getMyChannels()
+      console.log(res)
+      this.list = res
+    },
+    async del (id) {
+      this.list.splice(id, 1)
+    }
   }
+
 }
 </script>
 <style scoped lang="less">

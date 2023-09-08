@@ -62,7 +62,7 @@ export default {
   },
 
   activated () {
-    console.log('actived 激活 → 进入页面')
+    console.log('我活了')
     console.log(this.scrollTop)
     this.$refs.ArticleList.scrollTop = this.scrollTop
   }
