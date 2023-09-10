@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div class="app">
     <keep-alive include="HomePage">
       <RouterView class="body" />
     </keep-alive>
@@ -8,7 +8,7 @@
   </div>
 </template>
 <style lang="less" scoped>
-#app {
+.app {
   position: absolute;
   left: 0;
   top: 0;

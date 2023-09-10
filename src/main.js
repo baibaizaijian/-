@@ -9,6 +9,7 @@ import 'vant/lib/index.css'
 import relativeTime from 'dayjs/plugin/relativeTime'
 // 导入插件
 import Geek from '@/components'
+import '@/assets/styles/index.less'
 dayjs.extend(relativeTime)
 Vue.use(Geek)
 

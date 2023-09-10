@@ -1,7 +1,8 @@
 <template>
   <van-popup
     :value="value"
-    @click-close-icon="$emit('input', false)"
+    @click-close-icon="close
+"
     closeable
     position="left"
   >
@@ -120,7 +121,12 @@ export default {
       // 成功：更新我的频道
       const index = this.myChannels.findIndex(item => item.id === id)
       this.$emit('del', index)
+    },
+    close () {
+      this.isEdit = false
+      this.$emit('input', false)
     }
+
   }
 }
 </script>

@@ -1,5 +1,6 @@
 <template>
-  <div class="article-item van-hairline--bottom">
+<!-- 跳转动态路由传参 -->
+  <div class="article-item van-hairline--bottom" @click="$router.push('/article?id='+ article.art_id)">
     <p class="title van-multi-ellipsis--l2" :class="{w66: article.cover.type===1}">{{article.title}}</p>
     <img v-for="(url,i) in article.cover.images" :key="i" class="img" :src="url" alt="">
     <div class="info">
