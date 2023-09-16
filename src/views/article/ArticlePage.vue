@@ -7,13 +7,18 @@
           <van-image round width="7vw" height="7vw" :src="article.aut_photo" />
           <span class="name">{{ article.aut_name }}</span>
           <span class="line">|</span>
-          <span class="follow">关注</span>
+        <span @click="followAuthor" class="follow" :class="{un:article.is_followed}">
+            {{article.is_followed?'取消关注':'关注'}}
+          </span>
         </div>
       </template>
       <template #right>
         <van-icon name="ellipsis" size="5.4vw"></van-icon>
       </template>
     </van-nav-bar>
+        <div v-if="loading" class="article-skeleton">
+      <van-skeleton title :row="12" />
+    </div>
     <div class="article-wrapper"  ref="wrapper" @scroll="onScroll">
       <!-- 头部：标题 时间 作者 -->
       <div class="header" ref="header">
@@ -38,25 +43,32 @@
         </div>
       </div>
       <!-- 内容：文章内容 -->
-      <div class="main">
-        <!-- <div class="html" v-html="article.content"></div> -->
-        <div class="html">
+      <div class="main" ref="main">
+        <div class="html" v-html="article.content" v-highlight></div>
+        <!-- <div class="html">
           <p v-for="i in 10" :key="i">我会把书籍分成两类,一类是全面型,一类是犀利型.前面介绍了一本全面型的书籍,接下来介绍的这本的特点是非常犀利,这类书籍的特点是作者能找对重点(2/8原则掌握的很好),在重点位置深入挖掘.这本书的作者John Resig也是JQuery的作者,他显然是个足够犀利的人儿.JQuery从未承诺解决所有问题,但再一些重点部位的突破,让这个类库如此流行.这本书并没有着重介绍JQuery,还是基于原生的JavaScript和DOM API.</p>
-        </div>
+        </div> -->
         <div class="space"></div>
       </div>
       <!-- 评论：评论组件 -->
+      <article-comment v-if="article.art_id" :article.sync="article"  @click-comment="srollToComment"></article-comment>
     </div>
   </div>
 </template>
 <script>
+import ArticleComment from './components/article-comment.vue'
 import { getArticle, followAuthor } from '@/api/article'
 export default {
+  components: { ArticleComment },
   name: 'ArticlePage',
   data () {
     return {
       article: {},
-      show: false
+      show: false,
+      // 加载时骨架
+      loading: false,
+      // 是否滚动到评论位置
+      toComment: false
     }
   },
   created () {
@@ -64,9 +76,12 @@ export default {
   },
   methods: {
     async getArticle () {
+      this.loading = true
       const res = await getArticle(this.$route.query.id)
-      console.log(res)
+      console.log('详情', res)
       this.article = res.data.data
+      console.log('文章详情', this.article)
+      this.loading = false
     },
     onScroll () {
       // 获取页面卷动距离
@@ -82,6 +97,19 @@ export default {
 
       this.$toast.success(newStatus ? '关注成功' : '取消关注')
       this.article.is_followed = newStatus
+    },
+
+    srollToComment () {
+      const headerHeight = this.$refs.header.offsetHeight
+      const mainHeight = this.$refs.main.offsetHeight
+      // 是否滚动到评论，切换状态
+      this.toComment = !this.toComment
+      // 来回切换
+      if (this.toComment) {
+        this.$refs.wrapper.scrollTop = headerHeight + mainHeight
+      } else {
+        this.$refs.wrapper.scrollTop = 0
+      }
     }
   }
 }
@@ -165,6 +193,13 @@ export default {
   }
   .follow {
     color: @geek-color;
+    // 加上&  .follow.un    交集选择器
+    &.un {
+     color: #999;
+   }
   }
+  .article-skeleton {
+  padding-top: 60px;
+}
 }
 </style>

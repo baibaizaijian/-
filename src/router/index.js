@@ -9,7 +9,7 @@ const Home = () => import('@/views/HomePage')
 const Question = () => import('@/views/QuestionPage')
 const Video = () => import('@/views/VideoPage')
 const User = () => import('@/views/UserPage')
-const Article = () => import('@/views/ArticlePage')
+const Article = () => import('@/views/article/ArticlePage')
 const Login = () => import('@/views/login')
 const routes = [
   // 路由规则
