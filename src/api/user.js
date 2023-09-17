@@ -18,3 +18,40 @@ export const sendMessage = (mobile) => {
     url: `/v1_0/sms/codes/${mobile}`
   })
 }
+
+/**
+ * 获取当前用户的信息（资料和统计）
+ */
+export const getUserInfo = () => {
+  return request({ url: '/v1_0/user' })
+}
+
+/**
+ * 获取当前用户的资料
+ */
+export const getUserProfile = () => {
+  return request({ url: '/v1_0/user/profile' })
+}
+
+/**
+ * 修改头像
+ * @param {Object} formData -  {photo:'文件数据'}
+ */
+export const updateUserPhoto = (formData) => {
+  return request({
+    url: '/v1_0/user/photo',
+    method: 'patch',
+    data: formData
+  })
+}
+/**
+ * 修改用户
+ * @param {Object} user - 用户对象
+ */
+export const updateUserProfile = (user) => {
+  return request({
+    url: '/v1_0/user/profile',
+    method: 'patch',
+    data: user
+  })
+}
